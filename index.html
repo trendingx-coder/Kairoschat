@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>人生K线</title>
+  <style>
+    body { font-family: Arial; text-align: center; background: #f0f0f0; }
+    input, button { margin: 10px; padding: 10px; }
+    #chart { width: 80%; height: 400px; margin: 20px auto; }
+    canvas { background: white; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>人生K线模拟器</h1>
+  <input type="text" id="name" placeholder="姓名"><br>
+  <input type="date" id="birth" placeholder="出生日期"><br>
+  <select id="gender"><option value="男">男</option><option value="女">女</option></select><br>
+  <button onclick="generate()">生成人生K线</button>
+  <div id="analysis"></div>
+  <canvas id="chart"></canvas>
+
+  <script>
+    let myChart;
+    function generate() {
+      const name = document.getElementById('name').value || '匿名';
+      const birth = document.getElementById('birth').value;
+      const gender = document.getElementById('gender').value;
+      
+      // 这里替换为免费AI API调用（示例用fetch到免费代理，或直接提示用户手动）
+      // 快速免费方式：模拟AI输出（真实复制需接入API）
+      const prompt = `模拟${gender}姓${name.split('')[0]}的人生K线，出生${birth}，输出JSON: {"analysis":"文字命理分析","data":[[年份,开,收,高,低],...]} 如[[2020,50,55,60,45],...]`;
+      
+      // 免费快速模拟数据（原站类似随机+命理风格）
+      const years = [];
+      const base = 50;
+      let val = base;
+      for(let y=20; y<=80; y+=2){
+        const change = Math.random()*20 - 10;
+        val = Math.max(10, Math.min(100, val + change));
+        years.push({
+          x: 2000 + y,
+          open: val - Math.random()*5,
+          close: val,
+          high: val + Math.random()*10,
+          low: val - Math.random()*10
+        });
+      }
+      const fakeAnalysis = `${name}的人生起伏不定，早年平稳，中年大起大落，晚年富贵。`;
+      
+      document.getElementById('analysis').innerHTML = `<p>${fakeAnalysis}</p>`;
+      
+      if(myChart) myChart.destroy();
+      myChart = new Chart(document.getElementById('chart'), {
+        type: 'candlestick',  // 需要Chart.js金融插件，免费CDN: 加下面script
+        data: { datasets: [{ label: '人生K线', data: years }] },
+        options: { scales: { x: { type: 'linear' } } }
+      });
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
+</body>
+</html>
